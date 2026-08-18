@@ -1,0 +1,121 @@
+country_a,country_b,co_productions,movies,tv_shows,avg_release_year
+United Kingdom,United States,232,198.0,34.0,2011.0
+Canada,United States,189,136.0,53.0,2014.0
+France,United States,98,78.0,20.0,2012.0
+Germany,United States,71,64.0,7.0,2010.0
+Belgium,France,55,52.0,3.0,2015.0
+Canada,United Kingdom,54,44.0,10.0,2014.0
+France,United Kingdom,51,44.0,7.0,2013.0
+Japan,United States,51,27.0,24.0,2011.0
+China,United States,47,44.0,3.0,2016.0
+Germany,United Kingdom,44,38.0,6.0,2013.0
+Australia,United States,40,33.0,7.0,2011.0
+Mexico,United States,39,22.0,17.0,2015.0
+China,Hong Kong,37,36.0,1.0,2012.0
+France,Germany,35,28.0,7.0,2014.0
+India,United States,33,30.0,3.0,2015.0
+Canada,France,32,24.0,8.0,2012.0
+Spain,United States,28,23.0,5.0,2015.0
+Italy,United States,23,18.0,5.0,2008.0
+Canada,Germany,20,16.0,4.0,2010.0
+Belgium,United Kingdom,20,20.0,0.0,2016.0
+Belgium,United States,20,20.0,0.0,2016.0
+France,Spain,19,18.0,1.0,2016.0
+South Korea,United States,19,12.0,7.0,2016.0
+Australia,United Kingdom,18,15.0,3.0,2013.0
+Ireland,United States,18,11.0,7.0,2014.0
+South Africa,United States,17,14.0,3.0,2013.0
+France,Italy,17,15.0,2.0,2011.0
+Argentina,Spain,16,15.0,1.0,2014.0
+Ireland,United Kingdom,15,10.0,5.0,2013.0
+India,United Kingdom,15,14.0,1.0,2014.0
+Hong Kong,United States,15,15.0,0.0,2008.0
+France,Japan,15,7.0,8.0,2008.0
+Spain,United Kingdom,14,9.0,5.0,2015.0
+Germany,Spain,13,9.0,4.0,2015.0
+Italy,United Kingdom,12,11.0,1.0,2010.0
+China,United Kingdom,12,10.0,2.0,2018.0
+Denmark,United States,12,8.0,4.0,2017.0
+Denmark,United Kingdom,12,12.0,0.0,2014.0
+Sweden,United States,12,11.0,1.0,2016.0
+Japan,United Kingdom,12,12.0,0.0,2010.0
+New Zealand,United States,11,6.0,5.0,2010.0
+Germany,Netherlands,11,10.0,1.0,2016.0
+Denmark,Sweden,11,11.0,0.0,2014.0
+Czech Republic,United States,11,6.0,5.0,2012.0
+United Arab Emirates,United States,11,11.0,0.0,2013.0
+Canada,Spain,11,9.0,2.0,2013.0
+Israel,United States,10,9.0,1.0,2016.0
+Belgium,Germany,10,10.0,0.0,2015.0
+Mexico,Spain,10,7.0,3.0,2016.0
+Canada,China,10,9.0,1.0,2017.0
+Canada,Japan,10,5.0,5.0,2016.0
+Colombia,United States,10,2.0,8.0,2015.0
+China,South Korea,9,5.0,4.0,2017.0
+Greece,United States,9,7.0,2.0,2014.0
+Denmark,Germany,9,8.0,1.0,2015.0
+France,Switzerland,9,9.0,0.0,2015.0
+Denmark,France,9,9.0,0.0,2012.0
+Sweden,United Kingdom,9,9.0,0.0,2013.0
+Canada,Ireland,8,5.0,3.0,2016.0
+France,Netherlands,8,7.0,1.0,2015.0
+France,Lebanon,8,8.0,0.0,1997.0
+China,France,8,7.0,1.0,2017.0
+Canada,India,8,8.0,0.0,2016.0
+France,Luxembourg,8,7.0,1.0,2016.0
+Poland,United States,8,5.0,3.0,2017.0
+Belgium,Canada,8,8.0,0.0,2015.0
+Bulgaria,United States,7,7.0,0.0,2017.0
+Luxembourg,United States,7,6.0,1.0,2015.0
+Belgium,Netherlands,7,6.0,1.0,2017.0
+Thailand,United States,7,7.0,0.0,2017.0
+Netherlands,United Kingdom,7,7.0,0.0,2014.0
+Netherlands,United States,7,6.0,1.0,2014.0
+Brazil,United States,7,6.0,1.0,2016.0
+Germany,Italy,7,4.0,3.0,2016.0
+Argentina,United States,7,6.0,1.0,2018.0
+France,India,7,6.0,1.0,2010.0
+Australia,Canada,7,4.0,3.0,2015.0
+Denmark,Netherlands,7,7.0,0.0,2015.0
+Norway,Sweden,7,5.0,2.0,2015.0
+China,India,7,7.0,0.0,2017.0
+Colombia,Mexico,6,1.0,5.0,2016.0
+Germany,Norway,6,5.0,1.0,2015.0
+New Zealand,United Kingdom,6,6.0,0.0,2013.0
+Brazil,France,6,6.0,0.0,2015.0
+Japan,South Korea,6,4.0,2.0,2018.0
+Norway,United States,6,5.0,1.0,2015.0
+Germany,Sweden,6,5.0,1.0,2015.0
+Greece,United Kingdom,6,4.0,2.0,2012.0
+Czech Republic,United Kingdom,6,5.0,1.0,2008.0
+Russia,United States,6,5.0,1.0,2014.0
+Denmark,Norway,5,4.0,1.0,2016.0
+Spain,Uruguay,5,5.0,0.0,2014.0
+Belgium,Luxembourg,5,5.0,0.0,2017.0
+Australia,New Zealand,5,3.0,2.0,2015.0
+Switzerland,United States,5,5.0,0.0,2015.0
+Singapore,United States,5,3.0,2.0,2017.0
+Brazil,Germany,5,4.0,1.0,2013.0
+Chile,United States,5,4.0,1.0,2015.0
+Finland,Germany,5,3.0,2.0,2017.0
+Argentina,Uruguay,5,5.0,0.0,2015.0
+Egypt,France,5,5.0,0.0,1999.0
+Australia,France,5,3.0,2.0,2014.0
+Italy,Spain,5,4.0,1.0,2018.0
+Canada,Luxembourg,5,4.0,1.0,2016.0
+France,Mexico,5,5.0,0.0,2009.0
+Germany,India,5,4.0,1.0,2014.0
+Czech Republic,Germany,5,4.0,1.0,2013.0
+France,Ireland,5,5.0,0.0,2015.0
+Argentina,France,5,5.0,0.0,2017.0
+Indonesia,United States,5,4.0,1.0,2016.0
+Australia,Germany,5,3.0,2.0,2013.0
+Canada,Italy,5,3.0,2.0,2015.0
+Germany,Switzerland,5,5.0,0.0,2015.0
+Argentina,Chile,5,5.0,0.0,2016.0
+Belgium,Denmark,5,5.0,0.0,2015.0
+Germany,Israel,5,5.0,0.0,2015.0
+Belgium,Spain,5,5.0,0.0,2017.0
+Philippines,United States,5,5.0,0.0,2017.0
+France,Poland,5,5.0,0.0,2010.0
+South Africa,United Kingdom,5,4.0,1.0,2016.0

@@ -1,0 +1,3 @@
+title_type,titles,pct_missing_director,pct_missing_cast,pct_missing_country,pct_missing_date_added,pct_missing_rating,avg_completeness_score,pct_fully_complete
+Movie,5377,3.0,7.9,4.3,0.0,0.1,4.85,86.9
+TV Show,2410,92.4,12.1,11.5,0.4,0.1,3.84,5.6

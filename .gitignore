@@ -1,0 +1,10 @@
+data/processed/
+*.duckdb
+*.duckdb.wal
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
