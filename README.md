@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-2a78d6)](https://www.python.org/)
 [![DuckDB](https://img.shields.io/badge/DuckDB-warehouse-eda100)](https://duckdb.org/)
 [![Models](https://img.shields.io/badge/models-5%20across%203%20layers-1baf7a)](sql/)
-[![Tests](https://img.shields.io/badge/tests-10%20passing-0ca30c)](sql/tests)
+[![CI](https://github.com/Maheshushir/netflix-elt-data-cleaning/actions/workflows/ci.yml/badge.svg)](https://github.com/Maheshushir/netflix-elt-data-cleaning/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-52514e)](LICENSE)
 
 A layered **ELT** over the Netflix titles catalogue: the CSV lands in the
