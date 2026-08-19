@@ -1,4 +1,4 @@
-# Netflix Catalogue — ELT & Data Cleaning in SQL
+# Netflix Catalogue · ELT & Data Cleaning in SQL
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-2a78d6)](https://www.python.org/)
 [![DuckDB](https://img.shields.io/badge/DuckDB-warehouse-eda100)](https://duckdb.org/)
@@ -6,23 +6,23 @@
 [![CI](https://github.com/Maheshushir/netflix-elt-data-cleaning/actions/workflows/ci.yml/badge.svg)](https://github.com/Maheshushir/netflix-elt-data-cleaning/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-52514e)](LICENSE)
 
-A layered **ELT** over the Netflix titles catalogue: the CSV lands in the
-warehouse untouched, and every cleaning decision is a reviewable SQL model with
-a test behind it. Structured the way dbt structures a project — staging →
-intermediate → marts — but implemented in ~120 lines of Python so the mechanics
-are visible rather than hidden behind a framework.
+A layered **ELT** over the Netflix titles catalogue. The CSV lands in the
+warehouse untouched, and every cleaning decision is a reviewable SQL model with a
+test behind it. Structured the way dbt structures a project (staging, then
+intermediate, then marts) but implemented in about 120 lines of Python so the
+mechanics stay visible rather than hidden behind a framework.
 
 > **The finding that justifies the whole project:** a naive
-> `COUNT(DISTINCT country)` on this dataset returns **681 countries**. There are
-> **117**. The `country` column packs up to 12 comma-separated values into one
-> cell, so `'United States, India'` is counted as a country in its own right.
-> The same defect inflates genres from 29 to 492.
+> `COUNT(DISTINCT country)` on this dataset returns 681 countries. There are 117.
+> The `country` column packs up to 12 comma-separated values into one cell, so
+> `'United States, India'` gets counted as a country in its own right. The same
+> defect inflates genres from 29 to 492.
 
 ---
 
 ## Contents
 
-- [ELT, not ETL — and why it matters here](#elt-not-etl--and-why-it-matters-here)
+- [ELT, not ETL, and why it matters here](#elt-not-etl-and-why-it-matters-here)
 - [The layers](#the-layers)
 - [What was actually wrong with this data](#what-was-actually-wrong-with-this-data)
 - [The test suite](#the-test-suite)
@@ -32,7 +32,7 @@ are visible rather than hidden behind a framework.
 
 ---
 
-## ELT, not ETL — and why it matters here
+## ELT, not ETL, and why it matters here
 
 ```mermaid
 flowchart LR
@@ -49,17 +49,17 @@ flowchart LR
 ```
 
 `src/load_raw.py` loads every column as `VARCHAR` with `all_varchar = true`.
-That is deliberate: **type inference is a transformation**, and transformations
-belong in a reviewable model, not in a CSV reader's heuristics. The raw table is
+That's on purpose. Type inference is a transformation, and transformations belong
+in a reviewable model rather than in a CSV reader's heuristics. The raw table is
 a faithful landing of the source, so when a cleaning rule turns out to be wrong
-the fix is a SQL change and a 0.85-second re-run — the source of truth is
-already in the warehouse.
+the fix is a SQL change and a 0.85-second re-run. The source of truth is already
+in the warehouse.
 
-This is the deliberate contrast with the sibling project
+This is the intended contrast with the sibling project
 [nyc-taxi-etl-pipeline](https://github.com/Maheshushir/nyc-taxi-etl-pipeline),
-where the transform happens *before* the load and the raw form is not retained.
+where the transform happens *before* the load and the raw form isn't retained.
 Neither is better; they answer different questions. ELT wins when the source is
-small, messy, and the cleaning rules are still being argued about — which is
+small, messy, and the cleaning rules are still being argued about, which is
 exactly this dataset.
 
 ---
@@ -69,7 +69,7 @@ exactly this dataset.
 | Layer | Materialisation | Why |
 |---|---|---|
 | `staging` | **view** | Cheap, always fresh, no storage. Keeps `raw` as the single source of truth. |
-| `intermediate` | **table** | The `UNNEST` explodes are the expensive step; materialise once, reuse three times. |
+| `intermediate` | **table** | The `UNNEST` explodes are the expensive step. Materialise once, reuse three times. |
 | `marts` | **table** | What analysts and BI tools read. |
 
 ```
@@ -95,14 +95,14 @@ Built 5 models, 103,778 rows total, in 0.85s
 ### 1. Multi-value cells (the big one)
 
 `country`, `listed_in` and `cast` each pack a variable-length list into one
-string — up to 12 countries, 3 genres and **50 cast members** per cell.
+string: up to 12 countries, 3 genres and 50 cast members per cell.
 
 ![Cleaning impact](outputs/charts/01_cleaning_impact.png)
 
 `int_title_countries` and friends explode these into proper bridge tables with
-`UNNEST(STRING_SPLIT(...)) WITH ORDINALITY`, keeping the ordinal position —
-because the first-listed country is conventionally the primary production
-country, and that is information the raw string throws away.
+`UNNEST(STRING_SPLIT(...)) WITH ORDINALITY`, keeping the ordinal position,
+because the first-listed country is conventionally the primary production country
+and that's information the raw string throws away.
 
 Two traps the tests pin down: trailing commas (`'United States, '`) leave an
 empty token after the split, and every token carries a leading space, so
@@ -110,22 +110,21 @@ empty token after the split, and every token carries a leading space, so
 
 ### 2. One column, two units
 
-`duration` holds `'93 min'` for films and `'4 Seasons'` for series. Left as
-text it cannot be used for arithmetic; cast naively it puts 93 minutes and 4
-seasons on the same axis. Staging splits it into `duration_minutes` and
-`seasons`, and [`duration_units_split.sql`](sql/tests/duration_units_split.sql)
-asserts that every row resolves to exactly one of them — never both, never
-neither.
+`duration` holds `'93 min'` for films and `'4 Seasons'` for series. Left as text
+it can't be used for arithmetic. Cast naively it puts 93 minutes and 4 seasons on
+the same axis. Staging splits it into `duration_minutes` and `seasons`, and
+[`duration_units_split.sql`](sql/tests/duration_units_split.sql) asserts that
+every row resolves to exactly one of them, never both and never neither.
 
 ### 3. An engine-dependent date bug
 
 88 `date_added` values carry a leading space (`' March 15, 2019'`).
 
-DuckDB's `strptime` tolerates that. **pandas' `to_datetime` with the same format
-string returns `NaT`.** So identical cleaning logic gives different answers
-depending on which engine runs it — 88 rows silently vanish from the "titles
-added per month" series in one and not the other. The `TRIM` is not redundant
-defensive coding; it is what makes the result engine-independent, and
+DuckDB's `strptime` tolerates that. pandas' `to_datetime` with the same format
+string returns `NaT`. So identical cleaning logic gives different answers
+depending on which engine runs it, and 88 rows silently vanish from the "titles
+added per month" series in one and not the other. The `TRIM` isn't redundant
+defensive coding; it's what makes the result engine-independent, and
 [`date_added_parsed.sql`](sql/tests/date_added_parsed.sql) pins the contract at
 the value level so no future refactor can quietly drop it.
 
@@ -134,9 +133,9 @@ the value level so no future refactor can quietly drop it.
 Netflix tags `'TV Dramas'` and `'Dramas'` separately, likewise
 `'TV Comedies'`/`'Comedies'` and `'TV Horror'`/`'Horror Movies'`. Left alone,
 every genre chart shows each category twice at half its real size.
-`genre_normalised` collapses the format prefix — 42 Netflix labels become 29
-genres — while `genre` keeps the verbatim label, because "what does Netflix call
-this?" is still a legitimate question.
+`genre_normalised` collapses the format prefix, taking 42 Netflix labels down to
+29 genres, while `genre` keeps the verbatim label, because "what does Netflix
+call this?" is still a legitimate question.
 
 ### 5. Missingness that is very much not random
 
@@ -144,24 +143,24 @@ this?" is still a legitimate question.
 
 | Field | Missing in Movies | Missing in TV Shows |
 |---|---:|---:|
-| director | 3.0% | **92.4%** |
+| director | 3.0% | 92.4% |
 | cast | 7.9% | 12.1% |
 | country | 4.3% | 11.5% |
 | rating | 0.1% | 0.1% |
 
-Only **5.6%** of TV shows are complete on all five fields, against **86.9%** of
-films. Any "top directors on Netflix" analysis that ignores this silently
-answers a question about films only, while appearing to describe the whole
-catalogue. `dim_title` carries the five `missing_*` booleans and a 0–5
-`completeness_score` so this is a query rather than a forensic exercise.
+Only 5.6% of TV shows are complete on all five fields, against 86.9% of films.
+Any "top directors on Netflix" analysis that ignores this silently answers a
+question about films only while appearing to describe the whole catalogue.
+`dim_title` carries the five `missing_*` booleans and a 0-5 `completeness_score`
+so this is a query rather than a forensic exercise.
 
 ---
 
 ## The test suite
 
-Ten assertions in [`sql/tests/`](sql/tests). Each returns the **offending
-rows**, so an empty result is a pass — the same convention dbt uses. The runner
-fails the build if any test returns anything.
+Ten assertions in [`sql/tests/`](sql/tests). Each returns the offending rows, so
+an empty result is a pass, the same convention dbt uses. The runner fails the
+build if any test returns anything.
 
 | Test | What it protects |
 |---|---|
@@ -176,10 +175,10 @@ fails the build if any test returns anything.
 | `referential_integrity` | No bridge row points at a missing title |
 | `release_year_plausible` | Years inside the range of filmed media |
 
-Two of these caught real bugs while I was writing them: `not_null_keys` and
+Two of these caught real bugs while I was writing them. `not_null_keys` and
 `referential_integrity` originally put `HAVING` after a `UNION ALL`, which binds
-only to the final branch — so they were checking one column instead of four.
-Both are now wrapped in a CTE.
+only to the final branch, so they were checking one column instead of four. Both
+are now wrapped in a CTE.
 
 ---
 
@@ -196,18 +195,17 @@ pushing TV to 34.7% of everything added.
 
 ![Duration distributions](outputs/charts/05_duration_distributions.png)
 
-Films cluster hard at a 98-minute median across a 3–312 minute range. On the
-other side, **67% of TV shows never get a second season** — of 2,410 shows, only
-a handful reach double digits.
+Films cluster hard at a 98-minute median across a 3 to 312 minute range. On the
+other side, 67% of TV shows never get a second season. Of 2,410 shows, only a
+handful reach double digits.
 
 ### The country mix is a story about format, not volume
 
 ![Countries](outputs/charts/04_countries.png)
 
-The US leads on raw count, but the interesting column is the TV share: Japan is
-**64% television** — the anime catalogue — against 26% for the US. The UK
-co-produces 325 of its 723 titles. None of these numbers are computable from the
-raw column.
+The US leads on raw count, but the interesting column is the TV share. Japan is
+64% television (the anime catalogue) against 26% for the US. The UK co-produces
+325 of its 723 titles. None of these numbers are computable from the raw column.
 
 All ten result sets: [`outputs/results/ANALYSIS.md`](outputs/results/ANALYSIS.md)
 
@@ -222,8 +220,8 @@ pip install -r requirements.txt
 
 python src/load_raw.py     # E+L: land the CSV untouched
 python src/run_elt.py      # T: build 5 models, then run 10 tests
-python src/analyze.py      # 10 analysis queries → outputs/results/
-python src/visualize.py    # → outputs/charts/
+python src/analyze.py      # 10 analysis queries -> outputs/results/
+python src/visualize.py    # -> outputs/charts/
 ```
 
 The whole thing runs in a couple of seconds. Useful variants:
@@ -245,11 +243,11 @@ netflix-elt-data-cleaning/
 │   ├── load_raw.py                 # E+L, all_varchar, zero cleaning
 │   ├── run_elt.py                  # T: layered build + test runner
 │   ├── analyze.py                  # runs sql/analysis/*.sql
-│   └── visualize.py                # → outputs/charts/
+│   └── visualize.py                # -> outputs/charts/
 ├── sql/
-│   ├── staging/                    # 1 view  — type, trim, split, band
-│   ├── intermediate/               # 3 tables — the UNNEST bridges
-│   ├── marts/                      # 1 table — dim_title
+│   ├── staging/                    # 1 view: type, trim, split, band
+│   ├── intermediate/               # 3 tables: the UNNEST bridges
+│   ├── marts/                      # 1 table: dim_title
 │   ├── tests/                      # 10 assertions
 │   └── analysis/                   # 10 queries
 └── outputs/
@@ -262,42 +260,42 @@ netflix-elt-data-cleaning/
 ## Engineering decisions
 
 **NULLs stay NULL.** 2,389 titles have no director. Filling that with
-`'Unknown'` would make it a value — it would appear in `GROUP BY` output as the
-most prolific director on Netflix. NULL propagates correctly through aggregates;
-a sentinel string does not. The presentation layer decides how to display it.
+`'Unknown'` would make it a value, and it would then appear in `GROUP BY` output
+as the most prolific director on Netflix. NULL propagates correctly through
+aggregates; a sentinel string doesn't. The presentation layer decides how to
+display it.
 
 **Both the raw and the normalised genre label are kept.** Replacing
 `'TV Dramas'` with `'Dramas'` everywhere would destroy the ability to answer
 "what does Netflix actually call this?". Normalisation is an additional column,
 not a replacement.
 
-**Ordinal position is preserved through the explode.** `WITH ORDINALITY` gives
-`country_position` and `billing_position`, which is what makes "primary
-production country" and "top-billed cast" expressible at all.
+**Ordinal position survives the explode.** `WITH ORDINALITY` gives
+`country_position` and `billing_position`, without which "primary production
+country" and "top-billed cast" cannot be expressed at all.
 
 **The people bridge unions cast and directors.** The same human appears in both
 roles, and one table with a `role` discriminator makes "who does Netflix work
 with most?" a single `GROUP BY` instead of a union at query time.
 
-**`cast` is quoted everywhere.** It is a reserved word in DuckDB and most other
+**`cast` is quoted everywhere.** It's a reserved word in DuckDB and most other
 dialects. Staging renames it to `cast_raw` immediately so nothing downstream has
-to remember to quote it — which is exactly the kind of thing that otherwise
-breaks a pipeline three layers away from the cause. (It broke this one once, in
-`load_raw.py`, before the quoting went in.)
+to remember to quote it, which is otherwise the kind of thing that breaks a
+pipeline three layers away from the cause. It broke this one once, in
+`load_raw.py`, before the quoting went in.
 
 **Layer boundaries carry the dependency order.** No dependency graph, no DAG
-parser: `staging` → `intermediate` → `marts`, alphabetical within a layer. It is
+parser: staging, then intermediate, then marts, alphabetical within a layer. It's
 the simplest model that works, and it makes a circular dependency structurally
 impossible rather than merely detectable.
 
 ### Where this would move to dbt
 
-This project is a deliberate re-implementation of dbt's core ideas at small
-scale. At real scale I would use dbt itself and get: a true dependency graph
-from `ref()` rather than folder ordering, incremental models, snapshots for
-slowly changing dimensions, generated documentation, and a much larger built-in
-test library. The layer structure and the models would carry across almost
-unchanged.
+This project re-implements dbt's core ideas at small scale. At real scale I'd use
+dbt itself and get a true dependency graph from `ref()` rather than folder
+ordering, incremental models, snapshots for slowly changing dimensions, generated
+documentation, and a much larger built-in test library. The layer structure and
+the models would carry across almost unchanged.
 
 ---
 
@@ -310,4 +308,4 @@ without a Kaggle account.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

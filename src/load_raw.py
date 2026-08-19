@@ -1,9 +1,9 @@
-"""E + L of ELT — load the CSV into the warehouse with **zero** cleaning.
+"""E + L of ELT: load the CSV into the warehouse with **zero** cleaning.
 
 This is the whole point of ELT rather than ETL: the raw table is a faithful,
 byte-for-byte landing of the source. Every column is VARCHAR, nothing is
 trimmed, nothing is parsed, nothing is dropped. If a transformation later turns
-out to be wrong, the fix is a SQL change and a re-run — the source of truth is
+out to be wrong, the fix is a SQL change and a re-run. The source of truth is
 already in the warehouse and never has to be re-fetched.
 
 Contrast with the ETL sibling project (nyc-taxi-etl-pipeline), where the

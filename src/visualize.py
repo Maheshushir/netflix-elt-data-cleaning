@@ -106,7 +106,7 @@ def chart_completeness() -> None:
 
     T.title_block(
         ax,
-        "92% of TV shows have no director — missingness is not random",
+        "92% of TV shows have no director, so missingness is not random",
         "Movies are 3% missing on the same field. Any 'top directors' analysis "
         "that ignores this silently answers a question about films only, while "
         "appearing to describe the whole catalogue.",
@@ -172,7 +172,7 @@ def chart_countries() -> None:
     T.title_block(
         ax,
         "The US dominates, but the TV/film mix per country is the real story",
-        f"Japan is {jp['pct_tv'].iloc[0]:.0f}% television — the anime catalogue — "
+        f"Japan is {jp['pct_tv'].iloc[0]:.0f}% television (the anime catalogue) "
         f"against 26% for the US. These per-country splits only exist because "
         f"co-productions were exploded into one row per country.",
         wrap=100,

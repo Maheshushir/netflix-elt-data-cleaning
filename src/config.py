@@ -1,9 +1,9 @@
 """Paths and layer ordering for the Netflix ELT.
 
 The SQL layers execute in the order listed in `LAYERS`. Within a layer, files
-run alphabetically. That is deliberately the simplest possible dependency
-model: the layer boundaries carry the ordering, so no model in `marts/` can
-accidentally depend on another model in `marts/`.
+run alphabetically. That is the simplest dependency model that works: the layer
+boundaries carry the ordering, so no model in `marts/` can accidentally depend
+on another model in `marts/`.
 """
 from __future__ import annotations
 

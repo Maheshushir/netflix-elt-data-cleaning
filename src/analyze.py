@@ -51,7 +51,7 @@ def main() -> None:
         md.append(f"\n## {title}\n")
         if blurb:
             md.append(f"_{blurb}_\n")
-        md.append(f"\n`{len(df):,} rows` — full output in [`{out.name}`]({out.name})\n")
+        md.append(f"\n`{len(df):,} rows`. Full output in [`{out.name}`]({out.name})\n")
         md.append("\n" + df.head(n).to_markdown(index=False) + "\n")
         if len(df) > n:
             md.append(f"\n_...{len(df)-n:,} further rows in the CSV._\n")

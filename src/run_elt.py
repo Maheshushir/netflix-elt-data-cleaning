@@ -1,6 +1,6 @@
-"""T of ELT — execute the SQL layers in order, then run the test suite.
+"""T of ELT: execute the SQL layers in order, then run the test suite.
 
-A small, deliberate reimplementation of what dbt does: models are plain .sql
+A small reimplementation of what dbt does: models are plain .sql
 files that each SELECT, and the runner wraps them in CREATE OR REPLACE. Tests
 are .sql files that return the *offending* rows, so an empty result is a pass.
 
@@ -97,7 +97,7 @@ def main() -> None:
             print(f"\n{passed} passed, {failed} failed")
             if failed:
                 raise SystemExit(
-                    f"\n{failed} test(s) failed — the build is not trustworthy."
+                    f"\n{failed} test(s) failed, so the build is not trustworthy."
                 )
             print("\nAll assertions hold. Next: python src/analyze.py")
     finally:
